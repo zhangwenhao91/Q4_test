@@ -1,0 +1,6 @@
+* text=auto
+*.py text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+operators/**/upstream/* -text
+operators/spec_v1/upstream_mha/* -text
