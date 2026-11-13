@@ -20,7 +20,7 @@ lengths = [1,63,64,65,127,129,193,255,3583,3585,4095,4097] if mode.startswith('t
 tags = ['smoke']
 if mode.endswith('all'):
     tags += [f'check-{s}' for s in [42,43,44]]
-    tags += [f'bench-{m}-rep{r}' for r in [1,2,3] for m in ['cached','per_call']]
+    tags += [f'bench-{m}-rep{r}' for r in [1,2,3] for m in ['per_call']]
 (root/'plan.json').write_text(json.dumps(dict(mode=mode, lengths=lengths, tags=tags), indent=2))
 PY
 git rev-parse HEAD > "$OUT/revision.txt"
@@ -36,7 +36,7 @@ if [[ "$MODE" == all || "$MODE" == tails-all ]]; then
     run_case "check-$seed" --seed "$seed" --check-only
   done
   for rep in 1 2 3; do
-    for mode in cached per_call; do
+    for mode in per_call; do
       run_case "bench-$mode-rep$rep" --ac-metadata "$mode" --warmup 100 --iters 100 --rounds 10
     done
   done

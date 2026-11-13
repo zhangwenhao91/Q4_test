@@ -25,7 +25,7 @@ if not rows or not all(r['passed'] for r in rows):
 print('Accuracy:', len(rows), 'checks passed')
 lengths = sorted({int(f.parent.name) for f in a.input.glob('*/*/correctness.json')})
 for length in lengths:
-    for mode in ('cached', 'per_call'):
+    for mode in ('per_call',):
         runs = [json.loads(f.read_text()) for f in sorted(a.input.glob(f'bench-{mode}-rep*/{length}/summary.json'))]
         if not runs:
             continue

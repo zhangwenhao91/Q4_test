@@ -17,7 +17,7 @@ CPU端FP32计算参考Attention后转BF16。输出shape、dtype须匹配，无Na
 
 每规格3个独立进程，每进程预热100次、10轮、每轮100次。保存Event和wall耗时，轮次及进程均取中位数；轮换实现测量顺序。AC/TL>1表示TL更快。
 
-AC分别测cached（提前生成并复用metadata）与per_call（每次生成、包含该开销）。规格变化需要对应metadata，数值变化不要求重新生成。两种口径分开汇总，不能把per_call差距当作纯Attention内核差距。
+AC仅测per_call：每次调用重新生成metadata，生成开销计入Event/wall耗时。不执行或汇总cached模式，不能把per_call差距当作纯Attention内核差距。每个长度测3个独立进程。
 
 ## NPU服务器重跑
 

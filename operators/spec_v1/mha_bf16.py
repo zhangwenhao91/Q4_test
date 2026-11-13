@@ -82,18 +82,16 @@ def make_case(a,extra_builder=None):
         'ascendc_layout':f'BSND [1,{seq_len},1,128]; same contiguous storage as TileLang [{seq_len},128]',
         'metadata_mode':a.ac_metadata,'metadata_setup_wall_ms_including_first_jit':setup_ms,
         'metadata_numel':metadata.numel(),
-        'timing_boundary':('reused fixed-shape native metadata, setup excluded; output/temp allocation included'
-                           if a.ac_metadata=='cached' else
-                           'native metadata regenerated on each AscendC call and included in timing'),
+        'timing_boundary':'native metadata regenerated on each AscendC call and included in timing',
         'torch_role':'allocation, views, wrappers and timing only; no numerical attention fallback or output cast'}
 
 
 def native_runner(op,q,k,v,prepare_metadata,metadata,mode,seq_len=4096):
-    """Create the measured native call; cached mode must never regenerate metadata."""
-    if mode not in ('cached','per_call'):
+    """Regenerate metadata inside every measured native call."""
+    if mode != 'per_call':
         raise ValueError('Unknown metadata timing boundary')
     def run():
-        current=metadata if mode=='cached' else prepare_metadata()
+        current=prepare_metadata()
         out,_=op.flash_attn(q,k,v,metadata=current,softmax_scale=1/math.sqrt(128),
                             mask_mode=0,win_left=-1,win_right=-1,
                             max_seqlen_q=seq_len,max_seqlen_kv=seq_len,

@@ -29,7 +29,7 @@ def main():
     p.add_argument('--mha-seqlen', type=int, choices=[3584, 4096], default=4096)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--seed', type=int, default=42)
-    p.add_argument('--ac-metadata', choices=['cached', 'per_call'], default='cached')
+    p.add_argument('--ac-metadata', choices=['per_call'], default='per_call')
     p.add_argument('--warmup', type=int, default=100)
     p.add_argument('--iters', type=int, default=100)
     p.add_argument('--rounds', type=int, default=10)
